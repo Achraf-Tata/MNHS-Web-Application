@@ -25,54 +25,9 @@ Before you begin, ensure you have the following installed:
 
 ## 🚀 Quick Start
 
-### Option 1: Automated Setup (Recommended)
+### Application Setup :
 
-#### For Linux/Mac:
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/mnhs-database.git
-cd mnhs-database
-
-# Make scripts executable
-chmod +x setup.sh run.sh
-
-# Run setup
-./setup.sh
-
-# Configure your database credentials
-nano .env  # or use your preferred text editor
-
-# Run the application
-./run.sh
-```
-
-#### For Windows:
-
-```batch
-# Clone the repository
-git clone https://github.com/yourusername/mnhs-database.git
-cd mnhs-database
-
-# Run setup
-setup.bat
-
-# Configure your database credentials
-notepad .env
-
-# Run the application
-run.bat
-```
-
-### Option 2: Manual Setup
-
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/yourusername/mnhs-database.git
-   cd mnhs-database
-   ```
-
-2. **Create Virtual Environment**
+1. **Create Virtual Environment**
    ```bash
    # Linux/Mac
    python3 -m venv venv
@@ -83,12 +38,12 @@ run.bat
    venv\Scripts\activate
    ```
 
-3. **Install Dependencies**
+2. **Install Dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Set Up MySQL Database**
+3. **Set Up MySQL Database**
    
    Create a privileged user for the MNHS database:
    ```sql
@@ -98,7 +53,7 @@ run.bat
    FLUSH PRIVILEGES;
    ```
 
-5. **Configure Environment Variables**
+4. **Configure Environment Variables**
    
    Create a `.env` file in the project root:
    ```env
@@ -110,15 +65,13 @@ run.bat
    MYSQL_PASSWORD=your_password
    ```
 
-6. **Run the Application**
+5. **Run the Application**
    ```bash
    python app.py
    ```
 
-7. **Access the Application**
-   
+6. **Access the Application**
    Open your browser and navigate to: `http://127.0.0.1:5000`
-
 ## 📁 Project Structure
 
 ```
