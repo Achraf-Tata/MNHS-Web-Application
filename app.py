@@ -172,8 +172,9 @@ def api_get_total_upcAppt():
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("🚀 Flask server started!")
-    print("📱 Open your browser and go to: http://127.0.0.1:5000")
+    print("Server started!")
+    print("Open your browser and go to: http://127.0.0.1:5000")
     print("=" * 60)
 
     app.run(debug=True, host='127.0.0.1', port=5000)
+
