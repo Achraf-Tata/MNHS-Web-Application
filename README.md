@@ -98,12 +98,7 @@ run.bat
    FLUSH PRIVILEGES;
    ```
 
-5. **Import Database Schema**
-   ```bash
-   mysql -u mnhs_user -p mnhs_database < database_schema.sql
-   ```
-
-6. **Configure Environment Variables**
+5. **Configure Environment Variables**
    
    Create a `.env` file in the project root:
    ```env
@@ -115,12 +110,12 @@ run.bat
    MYSQL_PASSWORD=your_password
    ```
 
-7. **Run the Application**
+6. **Run the Application**
    ```bash
    python app.py
    ```
 
-8. **Access the Application**
+7. **Access the Application**
    
    Open your browser and navigate to: `http://127.0.0.1:5000`
 
@@ -265,12 +260,6 @@ Error 1216 (23000): Cannot add or update a child row: a foreign key constraint f
   - Check browser console for detailed errors
   - Clear browser cache and reload
   - Ensure CORS is properly configured in `app.py`
-
-**Issue: "Table doesn't exist"**
-- **Solution**: Import the database schema:
-  ```bash
-  mysql -u mnhs_user -p mnhs_database < database_schema.sql
-  ```
 
 ### Debug Mode
 
