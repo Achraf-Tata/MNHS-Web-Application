@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MNHS Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <style>
+        /* Base Styles & Reset */
+        :root {
+            --primary-blue: #5b93ff;
+            --light-blue: #e8f0fe;
+            --dark-blue: #2a3eb1;
+            --light-gray-bg: #f9fafb;
+            --medium-gray-border: #f0f0f0;
+            --dark-text: #333;
+            --light-text: #777;
+            --card-bg: #ffffff;
+            --shadow-light: 0 4px 10px rgba(0, 0, 0, 0.05);
+            --green-success: #28a745;
+            --red-danger: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-gray-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Utility classes */
+        .material-icons-outlined {
+            font-family: 'Material Icons Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 280px; /* Slightly wider as per image */
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow-light);
+            padding: 30px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 25px 30px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--medium-gray-border);
+        }
+
+        .sidebar-header .logo-icon {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .sidebar-header .logo-text {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+        .sidebar-header .logo-subtitle {
+            display: block;
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--light-text);
+        }
+
+        .sidebar-nav {
+            flex-grow: 1;
+            padding: 0 20px;
+            list-style: none;
+        }
+
+        .sidebar-nav-item {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-nav-item > a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            gap: 12px;
+            color: var(--light-text);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative; /* For the counter badge */
+        }
+
+        .sidebar-nav-item > a:hover {
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        .sidebar-nav-item.active > a {
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .sidebar-nav-item .material-icons-outlined {
+            font-size: 20px;
+            color: var(--light-text);
+            transition: color 0.2s ease;
+        }
+        .sidebar-nav-item > a:hover .material-icons-outlined,
+        .sidebar-nav-item.active > a .material-icons-outlined {
+            color: var(--primary-blue);
+        }
+
+        .sidebar-nav-item .badge {
+            margin-left: auto;
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .sidebar-nav-item:hover .badge,
+        .sidebar-nav-item.active .badge {
+             background-color: var(--dark-blue); /* Darker blue for contrast on hover/active */
+        }
+
+        .sidebar-divider {
+            border-top: 1px solid var(--medium-gray-border);
+            margin: 20px 0;
+        }
+
+        .sidebar-user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px 25px 0;
+            border-top: 1px solid var(--medium-gray-border);
+            margin-top: 20px;
+        }
+
+        .sidebar-user-profile img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .sidebar-user-info .name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .sidebar-user-info .role {
+            font-size: 13px;
+            color: var(--light-text);
+        }
+
+        .sidebar-user-profile .logout-icon {
+            margin-left: auto;
+            color: var(--light-text);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .sidebar-user-profile .logout-icon:hover {
+            color: var(--red-danger);
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--light-gray-bg);
+            padding: 40px;
+        }
+
+        .main-header-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: var(--dark-text);
+        }
+
+        /* --- Dashboard Grid --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 30px; /* Space before the table card */
+        }
+
+        /* Dashboard Stat Cards */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow-light);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card-header .icon-bg {
+            background-color: var(--light-blue);
+            border-radius: 50%;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-card-header .icon-bg .material-icons-outlined {
+            font-size: 22px;
+            color: var(--primary-blue);
+        }
+        .stat-card-header .title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+        .stat-card-header .arrow-icon {
+            margin-left: auto;
+            color: var(--light-text);
+            font-size: 20px;
+        }
+
+        .stat-card-value {
+            font-size: 38px;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 10px;
+        }
+
+        .stat-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .stat-card-footer .change {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--green-success); /* Default green for positive */
+        }
+        .stat-card-footer .change.negative {
+            color: var(--red-danger);
+        }
+        .stat-card-footer .change .material-icons-outlined {
+            font-size: 18px;
+        }
+
+        .mini-chart-placeholder {
+            width: 80px;
+            height: 30px;
+            background-color: var(--medium-gray-border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--light-text);
+        }
+
+        /* On-going Appointments Table Card */
+        .appointments-card {
+            grid-column: span 3; /* Spans all three columns */
+            padding: 30px;
+        }
+
+        .appointments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .appointments-header h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .appointments-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .appointments-search {
+            display: flex;
+            align-items: center;
+            background-color: var(--light-gray-bg);
+            border-radius: 8px;
+            padding: 8px 12px;
+            border: 1px solid var(--medium-gray-border);
+        }
+        .appointments-search input {
+            border: none;
+            outline: none;
+            background: none;
+            padding: 0 8px;
+            font-size: 14px;
+            color: var(--dark-text);
+        }
+        .appointments-search .material-icons-outlined {
+            font-size: 20px;
+            color: var(--light-text);
+        }
+
+        .appointments-filter-btn {
+            background-color: var(--light-gray-bg);
+            border: 1px solid var(--medium-gray-border);
+            border-radius: 8px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--light-text);
+            transition: all 0.2s ease;
+        }
+        .appointments-filter-btn:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+        .appointments-filter-btn .material-icons-outlined {
+            font-size: 20px;
+        }
+
+        /* Table Styling */
+        .appointments-table-container {
+            overflow-x: auto;
+            margin-bottom: 25px;
+        }
+
+        .appointments-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            min-width: 800px; /* Ensure it's wide enough */
+        }
+
+        .appointments-table th {
+            text-align: left;
+            padding: 15px 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--light-text);
+            border-bottom: 1px solid var(--medium-gray-border);
+            white-space: nowrap;
+        }
+        .appointments-table th:first-child { padding-left: 0px; }
+        .appointments-table th:last-child { padding-right: 0px; text-align: right; }
+
+
+        .appointments-table td {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--medium-gray-border);
+            font-size: 14px;
+            color: var(--dark-text);
+            vertical-align: middle;
+        }
+        .appointments-table td:first-child { padding-left: 0px; }
+        .appointments-table td:last-child { padding-right: 0px; text-align: right; }
+
+        .appointments-table tbody tr:last-child td {
+            border-bottom: none; /* No border for the last row */
+        }
+        
+        /* Table Row Hover Effect */
+        .appointments-table tbody tr:hover {
+            background-color: var(--light-gray-bg);
+        }
+
+        .patient-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .patient-info img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .patient-info .name {
+            font-weight: 600;
+        }
+        .patient-info .condition {
+            display: block;
+            font-size: 12px;
+            color: var(--light-text);
+            font-weight: 400;
+        }
+
+        .assigned-doctor {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .assigned-doctor img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .assigned-doctor .name {
+            font-weight: 600;
+        }
+        .assigned-doctor .specialty {
+            display: block;
+            font-size: 12px;
+            color: var(--light-text);
+            font-weight: 400;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .status-badge.customer { /* Used for Completed */
+            background-color: #e8f9ed;
+            color: var(--green-success);
+        }
+        .status-badge.churned { /* Used for Canceled */
+            background-color: #fbecec;
+            color: var(--red-danger);
+        }
+        .status-badge.pending {
+            background-color: #fff8e1;
+            color: #ffc107;
+        }
+        .status-badge.active { /* Used for Scheduled */
+            background-color: #e0f2f7;
+            color: #3498db;
+        }
+
+
+        .action-icon {
+            color: var(--light-text);
+            cursor: pointer;
+            transition: color 0.2s ease;
+            font-size: 20px;
+        }
+        .action-icon:hover {
+            color: var(--primary-blue);
+        }
+
+        .appointments-pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: var(--light-text);
+            padding-top: 15px;
+            border-top: 1px solid var(--medium-gray-border);
+        }
+
+        .pagination-buttons button {
+            background-color: var(--light-gray-bg);
+            border: 1px solid var(--medium-gray-border);
+            border-radius: 8px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--light-text);
+            transition: all 0.2s ease;
+            margin-left: 10px;
+        }
+        .pagination-buttons button:hover:not(:disabled) {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+        .pagination-buttons button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .pagination-buttons button.active {
+            background-color: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+        
+        /* General content views (hidden by default) */
+        .content-view {
+            display: none;
+            flex-direction: column; /* To make cards stack */
+            gap: 25px; /* Spacing between cards in other views */
+        }
+        .content-view.active {
+            display: flex;
+        }
+
+        .content-view .card {
+            padding: 25px; /* Consistent padding */
+        }
+
+        /* Basic form styling for other views */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .form-grid input, .form-grid textarea, .form-grid select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--medium-gray-border);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: var(--dark-text);
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+        .form-grid input:focus, .form-grid textarea:focus, .form-grid select:focus {
+            border-color: var(--primary-blue);
+        }
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: var(--light-text);
+            font-style: italic;
+            display: none;
+        }
+        .loading.show { display: block; }
+
+        .alert {
+            background: #e8f0fe;
+            border: 1px solid var(--primary-blue);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            color: var(--primary-blue);
+            font-weight: 500;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        /* Table styling for generic results (patients, stock, staff) */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid var(--medium-gray-border);
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .result-table th {
+            background: var(--light-gray-bg);
+            padding: 15px 20px;
+            text-align: left;
+            font-size: 13px;
+            text-transform: uppercase;
+            color: var(--light-text);
+            font-weight: 600;
+            border-bottom: 1px solid var(--medium-gray-border);
+        }
+        .result-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--medium-gray-border);
+            color: var(--dark-text);
+            vertical-align: middle;
+        }
+        .result-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .result-table tbody tr:hover {
+            background-color: var(--light-gray-bg);
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div>
+            <div class="sidebar-header">
+                <div>
+                    <span class="logo-text">MNHS</span>
+                    <span class="logo-subtitle">DB Application</span>
+                </div>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li class="sidebar-nav-item active">
+                    <a href="#" onclick="showContentView('dashboard')">
+                        <span class="material-icons-outlined">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="#" onclick="showContentView('appointments')">
+                        <span class="material-icons-outlined">event</span>
+                        Appointments
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="#" onclick="showContentView('patients')">
+                        <span class="material-icons-outlined">group</span>
+                        Patients
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="#" onclick="showContentView('doctors')">
+                        <span class="material-icons-outlined">health_and_safety</span>
+                        Staffs
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="#" onclick="showContentView('medication')">
+                        <span class="material-icons-outlined">medication</span>
+                        Medication Stock Alert
+                    </a>
+                </li>
+
+                <li class="sidebar-nav-item sidebar-divider" style="margin-top: 30px;"></li>
+                
+                <li class="sidebar-nav-item">
+                    <a href="#" onclick="showContentView('support')">
+                        <span class="material-icons-outlined">help_outline</span>
+                        About US
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-content">
+        <h1 class="main-header-title" id="mainHeader">Overview</h1>
+        
+        <div id="errorAlert" class="alert"></div>
+
+        <div id="dashboard" class="content-view active">
+            <div class="dashboard-grid">
+                
+                <div class="card stat-card">
+                    <div class="stat-card-header">
+                        <div class="icon-bg">
+                            <span class="material-icons-outlined">event</span>
+                        </div>
+                        <span class="title">Total Appointments</span>
+                        <span class="material-icons-outlined arrow-icon">chevron_right</span>
+                    </div>
+                    <span class="stat-card-value" id="totalAppointments">0</span>
+                    <div class="stat-card-footer">
+                        <div class="change">
+                            Upcoming Appointments
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card stat-card">
+                    <div class="stat-card-header">
+                        <div class="icon-bg">
+                            <span class="material-icons-outlined">person_add</span>
+                        </div>
+                        <span class="title">Total Patients</span>
+                                                <span class="material-icons-outlined arrow-icon">chevron_right</span>
+                    </div>
+                    <span class="stat-card-value" id="totalPatients">0</span>
+                    <div class="stat-card-footer">
+                        <div class="change">
+                            Registered
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card stat-card">
+                    <div class="stat-card-header">
+                        <div class="icon-bg">
+                            <span class="material-icons-outlined">healing</span>
+                        </div>
+                        <span class="title">Total Staff</span>
+                        <span class="material-icons-outlined arrow-icon">chevron_right</span>
+                    </div>
+                    <span class="stat-card-value" id="totalStaff">0</span>
+                    <div class="stat-card-footer">
+                        <div class="change">
+                            Under our system's supervision
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="card appointments-card">
+                <div class="appointments-header">
+                    <h3>Upcoming Appointments</h3>
+                    <div class="appointments-controls">
+                        <div class="appointments-search">
+                            <span class="material-icons-outlined">search</span>
+                            <input type="text" placeholder="Search">
+                        </div>
+                        <button class="appointments-filter-btn">
+                            <span class="material-icons-outlined">filter_list</span>
+                            filters
+                        </button>
+                    </div>
+                </div>
+
+                <div class="appointments-table-container">
+                    <table class="appointments-table">
+                        <thead>
+                            <tr>
+                                <th>Appointment ID</th> <th>Patient Name</th>
+                                <th>Date/Time</th>      <th>Assigned Doctor</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ongoingAppointmentsTableBody">
+                            </tbody>
+                    </table>
+                </div>
+                
+                <div class="appointments-pagination">
+                    <span>Loading...</span>
+                    <div class="pagination-buttons">
+                        <button disabled>Previous</button>
+                        <button class="active">1</button>
+                        <button>2</button>
+                        <button>Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="appointments" class="content-view">
+            <div class="card">
+                <h3>Full Appointment Schedule</h3>
+                <p style="color: var(--light-text); margin-bottom: 20px;">Use the form below to schedule new appointments.</p>
+                <div class="form-grid">
+                    <input type="text" id="caid" placeholder="Clinical Activity ID (CAID)">
+                    <input type="text" id="iid" placeholder="Patient ID (IID)">
+                    <input type="text" id="staffId" placeholder="Staff ID">
+                    <input type="text" id="depId" placeholder="Department ID">
+                    <input type="date" id="apptDate" placeholder="Date">
+                    <input type="time" id="apptTime" placeholder="Time">
+                </div>
+                <textarea id="reason" rows="3" placeholder="Reason for Appointment..." style="width: 100%; padding: 10px; margin-top: 20px; border: 1px solid var(--medium-gray-border); border-radius: 8px;"></textarea>
+                <button class="btn-primary" onclick="scheduleAppointment()" style="width: 100%; margin-top: 20px;">
+                    Schedule Appointment
+                </button>
+                 <div id="scheduleSuccess" class="alert" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+        
+        <div id="patients" class="content-view">
+            <div class="card" style="margin-bottom: 25px;">
+                <h3>Add New Patient 🧍</h3>
+                <p style="color: var(--light-text); margin-bottom: 20px;">
+                    Fill out all required fields below to register a new patient in the system.
+                </p>
+                <div class="form-grid">
+                    <input type="text" id="patientIID" placeholder="Patient ID (IID)" required>
+                    <input type="text" id="patientCIN" placeholder="CIN" required>
+                    <input type="text" id="patientFullName" placeholder="Full Name (e.g., Jane Doe)" required>
+                    <input type="date" id="patientBirth" placeholder="Date of Birth" required>
+                    
+                    <select id="patientSex" required>
+                        <option value="" disabled selected>Select Sex *</option>
+                        <option value="M">Male (M)</option>
+                        <option value="F">Female (F)</option>
+                    </select>
+                    
+                    <select id="patientBloodGroup" required>
+                        <option value="" disabled selected>Select Blood Group *</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+
+                    <input type="text" id="patientPhone" placeholder="Phone Number" required>
+                </div>
+                <button class="btn-primary" onclick="addPatient()" style="width: 100%; margin-top: 20px;">
+                    Register Patient
+                </button>
+                <div id="patientAddSuccess" class="alert" style="margin-top: 20px;"></div>
+            </div>
+
+            <div class="card">
+                <h3>Existing Patient Records</h3>
+                <p style="color: var(--light-text); margin-bottom: 20px;">
+                    Click below to fetch the full patient list.
+                </p>
+                <button class="btn-primary" onclick="loadPatients()">Load Patient Data</button>
+                <div id="patientsLoading" class="loading">Loading...</div>
+                <div id="patientsResult" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <div id="doctors" class="content-view">
+            <div class="card">
+                <h3>Doctor Workload Report</h3>
+                <p style="color: var(--light-text); margin-bottom: 20px;">
+                    Click below to get the full staff/doctor distribution report.
+                </p>
+                <button class="btn-primary" onclick="loadStaffShare(false)">Load Doctor Report</button>
+                <div id="staffFullLoading" class="loading">Loading...</div>
+                <div id="staffFullResult" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <div id="medication" class="content-view">
+            <div class="card">
+                <h3>Medication Stock (Inventory)</h3>
+                 <p style="color: var(--light-text); margin-bottom: 20px;">
+                    Click below to fetch medications that are below ReorderLevel.
+                </p>
+                <button class="btn-primary" onclick="loadStock()">Load All Stock</button>
+                <div id="stockLoading" class="loading">Loading...</div>
+                <div id="stockResult" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <div id="payments" class="content-view">
+            <div class="card"><h3>Payments Dashboard</h3><p>Payments content goes here...</p></div>
+        </div>
+        <div id="messages" class="content-view">
+            <div class="card"><h3>Messages & Communications</h3><p>Messages content goes here...</p></div>
+        </div>
+        <div id="support" class="content-view">
+    <div class="card" style="padding: 30px;">
+        <h3 style="font-size: 24px; font-weight: 700; color: var(--primary-blue); margin-bottom: 20px;">
+            <span class="material-icons-outlined" style="vertical-align: middle; margin-right: 10px; font-size: 28px;">info</span>
+            About the MNHS Dashboard Application
+        </h3>
+        
+        <p style="color: var(--light-text); font-style: italic; margin-bottom: 30px; border-left: 4px solid var(--light-blue); padding-left: 15px;">
+            A Database Management System Prototype for the Moroccan National Health Services (MNHS).
+        </p>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 10px; color: var(--dark-text);">I. Executive Summary</h4>
+            <p style="margin-bottom: 15px; color: var(--dark-text);">
+                This project is a prototype of a Database Management Application for the Moroccan National Health Services (MNHS). Its primary goal is to digitize and optimize the management of patient records, appointment scheduling, inventory logistics, and key performance indicators within a typical Moroccan public health facility (e.g., a Provincial Hospital Center or Urban Health Center).
+            </p>
+            <p style="color: var(--dark-text);">
+                The application is built on a robust web architecture, utilizing Python and the Flask framework for the back-end logic, with MySQL serving as the relational database management system. The user interface (HTML, CSS, JavaScript) ensures a dynamic user experience and the real-time visualization of operational data via an interactive dashboard.
+            </p>
+        </div>
+
+        <div style="margin-bottom: 25px; background-color: var(--light-gray-bg); padding: 20px; border-radius: 8px;">
+            <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: var(--primary-blue);">II.  Project Objectives</h4>
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="margin-bottom: 8px; position: relative; padding-left: 20px; color: var(--dark-text);">
+                    <span class="material-icons-outlined" style="position: absolute; left: 0; font-size: 16px; color: var(--green-success);">check_circle</span>
+                    <strong>Data Centralization:</strong> Establish a structured MySQL database to securely store and manage essential health data.
+                </li>
+                <li style="margin-bottom: 8px; position: relative; padding-left: 20px; color: var(--dark-text);">
+                    <span class="material-icons-outlined" style="position: absolute; left: 0; font-size: 16px; color: var(--green-success);">check_circle</span>
+                    <strong>Process Optimization:</strong> Provide an intuitive web interface for administrative and clinical staff to execute routine tasks quickly.
+                </li>
+                <li style="position: relative; padding-left: 20px; color: var(--dark-text);">
+                    <span class="material-icons-outlined" style="position: absolute; left: 0; font-size: 16px; color: var(--green-success);">check_circle</span>
+                    <strong>Operational Decision Support:</strong> Develop a dynamic dashboard displaying critical metrics in real-time.
+                </li>
+            </ul>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: var(--dark-text);">III. Technology Stack (Tech Stack)</h4>
+            <table class="result-table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Layer</th>
+                        <th>Technology</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Database</td>
+                        <td><strong>MySQL</strong></td>
+                        <td>Persistent and structured storage for all health records.</td>
+                    </tr>
+                    <tr>
+                        <td>Backend (Server Logic)</td>
+                        <td><strong>Python & Flask</strong></td>
+                        <td>Manages HTTP requests, business logic, and database connection.</td>
+                    </tr>
+                    <tr>
+                        <td>Frontend (User Interface)</td>
+                        <td><strong>HTML, CSS, JavaScript</strong></td>
+                        <td>Structuring, design, interactivity, and dynamic dashboard animation.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: var(--dark-text);">IV. Key Implemented Features</h4>
+            <ul style="list-style: none; padding-left: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <li class="card" style="padding: 15px; background-color: var(--card-bg); border: 1px solid var(--medium-gray-border);">
+                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 5px; color: var(--primary-blue);">
+                        <span class="material-icons-outlined" style="font-size: 18px; vertical-align: bottom;">medical_information</span> Core Clinical Management
+                    </div>
+                    Patient Intake, Appointment Scheduling, and Patient Directory.
+                </li>
+                <li class="card" style="padding: 15px; background-color: var(--card-bg); border: 1px solid var(--medium-gray-border);">
+                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 5px; color: var(--primary-blue);">
+                        <span class="material-icons-outlined" style="font-size: 18px; vertical-align: bottom;">analytics</span> Logistics & Analysis
+                    </div>
+                    Medication Reorder Alert (Low Stock) and Staff Share Percentage Calculation.
+                </li>
+                <li class="card" style="grid-column: span 2; padding: 15px; background-color: var(--card-bg); border: 1px solid var(--medium-gray-border);">
+                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 5px; color: var(--primary-blue);">
+                        <span class="material-icons-outlined" style="font-size: 18px; vertical-align: bottom;">auto_graph</span> Data Visualization & Dashboard
+                    </div>
+                    Displays Static (Staff, Patients, Appointments) and Dynamic Upcoming Appointments.
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+        <div id="settings" class="content-view">
+            <div class="card"><h3>Account Settings</h3><p>Settings content goes here...</p></div>
+        </div>
+        
+    </div>
+    <script>
+
+        var API_BASE_URL = 'http://127.0.0.1:5000'; 
+
+        function showError(message) {
+            const alert = document.getElementById('errorAlert');
+            alert.innerHTML = `<strong>Error:</strong> ${message}`;
+            alert.classList.add('show');
+            setTimeout(() => alert.classList.remove('show'), 5000);
+        }
+        
+        async function apiCall(endpoint, data) {
+            data = data || null;
+            var url = API_BASE_URL + '/' + endpoint;
+            var options = {
+                method: data ? 'POST' : 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                mode: 'cors'
+            };
+            if (data) { options.body = JSON.stringify(data); }
+            
+            try {
+                var response = await fetch(url, options);
+                var responseText = await response.text();
+                
+                // Check if the response is JSON before parsing (handle non-JSON errors gracefully)
+                if (response.headers.get("content-type") && response.headers.get("content-type").includes("application/json")) {
+                    var responseData = JSON.parse(responseText);
+                } else {
+                    // Fallback for non-JSON response (e.g., plain text error)
+                    var responseData = { error: responseText || 'Unknown error' };
+                }
+
+                if (!response.ok) {
+                    throw new Error(responseData.error || 'API request failed with status ' + response.status);
+                }
+                return responseData;
+            } catch (error) {
+                console.error('API Error:', error.message);
+                throw error;
+            }
+        }
+
+        // Helper function to map API status to CSS class
+        function getStatusClass(status) {
+            // The API returns 'Scheduled', 'Completed', or 'Canceled'
+            if (status === 'Scheduled') {
+                return 'active'; 
+            } else if (status === 'Completed') {
+                return 'customer'; // Uses the green styling
+            } else if (status === 'Canceled') {
+                return 'churned'; // Uses the red styling
+            } else {
+                return 'pending'; // Default for any other status
+            }
+        }
+
+        // Function to fetch and render ongoing appointments (RE-ADDED)
+        async function loadOngoingAppointments() {
+            const tableBody = document.getElementById('ongoingAppointmentsTableBody');
+            const paginationSpan = document.querySelector('.appointments-pagination span');
+            
+            // Show loading state
+            if (tableBody) {
+                tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--light-text); padding: 20px;">Loading appointments...</td></tr>';
+            }
+            if (paginationSpan) { paginationSpan.textContent = 'Loading...'; }
+
+            try {
+                // Call the API endpoint
+                const appointments = await apiCall('getAppt'); 
+
+                if (!appointments || appointments.length === 0) {
+                    if (tableBody) {
+                        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">No upcoming scheduled appointments found.</td></tr>';
+                    }
+                    if (paginationSpan) { paginationSpan.textContent = 'Showing 0 to 0 of 0 entries'; }
+                    return;
+                }
+
+                let html = '';
+                appointments.forEach(appt => {
+                    const statusClass = getStatusClass(appt.Status);
+                    
+                    // Format the date and time from the ApptDate (ApptDate contains the full timestamp)
+                    const apptDateTime = new Date(appt.ApptDate);
+                    const formattedDateTime = apptDateTime.toLocaleString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric', 
+                        year: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit', 
+                        hour12: true 
+                    });
+
+                    // Build table row
+                    html += '<tr>';
+                    html += `<td>${appt.CAID}</td>`; // Appointment ID
+                    
+                    // Patient Name 
+                    html += `<td>
+                                <div class="patient-info">
+                                    <div>
+                                        <div class="name">${appt.PatientName}</div>
+                                        <div class="condition">${appt.HName}</div>
+                                    </div>
+                                </div>
+                            </td>`;
+                    
+                    // Date/Time
+                    html += `<td>${formattedDateTime}</td>`;
+
+                    // Assigned Doctor
+                    html += `<td>
+                                <div class="assigned-doctor">
+                                    <div>
+                                        <div class="name">${appt.StaffName || 'N/A'}</div>
+                                        <div class="specialty">${appt.DName || 'N/A'}</div>
+                                    </div>
+                                </div>
+                            </td>`;
+                    
+                    // Status
+                    html += `<td><span class="status-badge ${statusClass}">${appt.Status}</span></td>`;
+                    
+                    // Action
+                    html += '</tr>';
+                });
+
+                if (tableBody) {
+                    tableBody.innerHTML = html;
+                }
+                if (paginationSpan) {
+                    paginationSpan.textContent = `Showing 1 to ${appointments.length} of ${appointments.length} entries`;
+                }
+
+            } catch (error) {
+                console.error('Error in loadOngoingAppointments:', error);
+                showError('Failed to load ongoing appointments. Check your API server and CORS settings: ' + error.message);
+                if (tableBody) {
+                    tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--red-danger); padding: 20px;">Error loading data. See console for details.</td></tr>';
+                }
+                if (paginationSpan) { paginationSpan.textContent = 'Error loading data'; }
+            }
+        }
+
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                // Use Math.ceil to ensure no decimals, use toLocaleString for thousand separators
+                obj.textContent = Math.ceil(progress * (end - start) + start).toLocaleString('en-US'); 
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+        
+        async function loadDashboardStats() {
+            const staffCardValue = document.getElementById('totalStaff');
+            const patientCardValue = document.getElementById('totalPatients');
+            const apptCardValue = document.getElementById('totalAppointments');
+
+            if (staffCardValue) staffCardValue.textContent = '0';
+            if (patientCardValue) patientCardValue.textContent = '0';
+            if (apptCardValue) apptCardValue.textContent = '0';
+
+            const animationDuration = 800;
+
+            try {
+                const [apptData, patientData, staffData] = await Promise.all([
+                    apiCall('total/upcAppts'),
+                    apiCall('total/patients'),
+                    apiCall('total/staffs')
+                ]);
+
+                // Correct field names returned by your API
+                const apptTotal = apptData.UpcomingAppointments || 0;
+                const patientTotal = patientData.TotalPatients || 0;
+                const staffTotal = staffData.TotalStaff || 0;
+
+                if (apptCardValue) {
+                    animateValue(apptCardValue, 0, apptTotal, animationDuration);
+                }
+                if (patientCardValue) {
+                    animateValue(patientCardValue, 0, patientTotal, animationDuration);
+                }
+                if (staffCardValue) {
+                    animateValue(staffCardValue, 0, staffTotal, animationDuration);
+                }
+
+            } catch (error) {
+                showError('Failed to load dashboard statistics: ' + error.message);
+
+                if (staffCardValue) staffCardValue.textContent = 'N/A';
+                if (patientCardValue) patientCardValue.textContent = 'N/A';
+                if (apptCardValue) apptCardValue.textContent = 'N/A';
+            }
+        }
+
+        
+        function showContentView(viewName) {
+            const sidebarItems = document.querySelectorAll('.sidebar-nav-item');
+            const views = document.querySelectorAll('.content-view');
+            const mainHeader = document.getElementById('mainHeader');
+
+            sidebarItems.forEach(item => item.classList.remove('active'));
+            const activeLink = document.querySelector(`.sidebar-nav-item a[onclick*="${viewName}"]`);
+            if (activeLink) {
+                 activeLink.closest('.sidebar-nav-item').classList.add('active');
+            }
+
+            views.forEach(view => {
+                 view.classList.remove('active');
+                 view.style.display = 'none';
+            });
+            const activeView = document.getElementById(viewName);
+            if (activeView) {
+                 // For the dashboard, use flex layout to stack grid and cards, which is the default for 'content-view'
+                 activeView.style.display = 'flex'; 
+                 activeView.classList.add('active');
+            }
+
+            const headers = {
+                'dashboard': 'Overview',
+                'appointments': 'Full Appointment Schedule',
+                'patients': 'Patient Records',
+                'doctors': 'Doctor Workload & Scheduling',
+                'medication': 'Medication Inventory & Stock',
+                'payments': 'Payments Dashboard',
+                'messages': 'Messages & Communications',
+                'support': 'About',
+                'settings': 'System Settings'
+            };
+            mainHeader.textContent = headers[viewName] || 'Dashboard';
+            
+            if (viewName === 'dashboard') {
+                loadDashboardStats();
+                loadOngoingAppointments(); // <-- CORRECTED: Added call to load appointments
+            } else if (viewName === 'patients') {
+                // Example call for other views if needed
+                // loadPatients(); 
+            }
+        }
+        
+        async function addPatient() {
+            const iid = document.getElementById('patientIID').value;
+            const cin = document.getElementById('patientCIN').value;
+            const fullName = document.getElementById('patientFullName').value;
+            const birth = document.getElementById('patientBirth').value;
+            const sex = document.getElementById('patientSex').value;
+            const bloodGroup = document.getElementById('patientBloodGroup').value;
+            const phone = document.getElementById('patientPhone').value;
+
+            if (!iid || !cin || !fullName || !birth || !sex || !bloodGroup || !phone) {
+                showError('Please fill in all required fields: IID, CIN, Full Name, Birth Date, Sex, Blood Group, and Phone Number.');
+                return;
+            }
+
+            const successMsg = document.getElementById('patientAddSuccess');
+            successMsg.classList.remove('show');
+            
+            try {
+                // API endpoint to add a patient (Assumed structure: POST /RegPatient)
+                var response = await apiCall('RegPatient', { 
+                    iid: iid, 
+                    cin: cin, 
+                    full_name: fullName, 
+                    birth: birth, 
+                    sex: sex,
+                    blood: bloodGroup,
+                    phone: phone
+                });
+                
+                const newPatientId = response.IID || iid; 
+                
+                successMsg.innerHTML = `<strong>✓ Patient added successfully!</strong><br>New Patient ID (IID): ${newPatientId} | Name: ${fullName}`;
+                successMsg.classList.add('show');
+                
+                // Clear form fields
+                document.getElementById('patientIID').value = '';
+                document.getElementById('patientCIN').value = '';
+                document.getElementById('patientFullName').value = '';
+                document.getElementById('patientBirth').value = '';
+                document.getElementById('patientSex').value = ''; 
+                document.getElementById('patientBloodGroup').value = ''; 
+                document.getElementById('patientPhone').value = '';
+
+                
+                setTimeout(function() {
+                    successMsg.classList.remove('show');
+                }, 5000);
+
+                // NEW: Re-load stats to update patient count immediately
+                loadDashboardStats();
+
+            } catch (error) {
+                showError('Failed to add patient: ' + error.message);
+            }
+        }
+        
+        async function loadPatients() {
+            const loading = document.getElementById('patientsLoading');
+            const result = document.getElementById('patientsResult');
+            
+            loading.classList.add('show');
+            result.innerHTML = '';
+            
+            try {
+                const data = await apiCall('patients');
+                
+                let html = '<div class="table-container"><table class="result-table"><thead><tr>';
+                html += '<th>ID</th><th>First Name</th><th>Last Name</th><th>Date of Birth</th><th>Phone</th>';
+                html += '</tr></thead><tbody>';
+                
+                data.forEach(patient => {
+                    // Simple parsing for display, adjust if needed for your specific data format
+                    const nameParts = patient.FullName.trim().split(/\s+/);
+                    const firstName = nameParts.shift() || '';
+                    const lastName = nameParts.join(" ");
+                    
+                    const birth = patient.Birth ? new Date(patient.Birth).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A';  
+
+                    html += '<tr>';
+                    html += '<td>' + patient.IID + '</td>';
+                    html += '<td>' + firstName + '</td>';
+                    html += '<td><strong>' + lastName + '</strong></td>';
+                    html += '<td>' + birth + '</td>';
+                    html += '<td>' + patient.Phone + '</td>';
+                    html += '</tr>';
+                });
+                
+                html += '</tbody></table></div>';
+                result.innerHTML = html;
+            } catch (error) {
+                showError('Failed to load patients: ' + error.message);
+            } finally {
+                loading.classList.remove('show');
+            }
+        }
+
+        async function scheduleAppointment() {
+            const patientId = document.getElementById('iid').value;
+            const staffId = document.getElementById('staffId').value;
+            const date = document.getElementById('apptDate').value;
+            const time = document.getElementById('apptTime').value;
+            const depId=document.getElementById('depId').value
+            const caId=document.getElementById('caid').value
+            const reason = document.getElementById('reason').value
+
+
+            if (!patientId || !staffId || !date || !time) {
+                showError('Please fill in all required fields');
+                return;
+            }
+            
+            const successMsg = document.getElementById('scheduleSuccess');
+            
+            try {                
+                var response = await apiCall('Appt', { caid: caId, iid: patientId, staff_id: staffId, dep_id: depId, date: date, time: time, reason: reason });
+                
+                // Assuming your API returns a confirmation message or AID
+                var appointmentId = response.AID || 'N/A';
+                
+                successMsg.innerHTML = '<strong>✓ Appointment scheduled successfully!</strong><br>Appointment ID: ' + appointmentId;
+                successMsg.classList.add('show');
+                
+                // Clear form
+                document.getElementById('iid').value = '';
+                document.getElementById('staffId').value = '';
+                document.getElementById('apptDate').value = '';
+                document.getElementById('apptTime').value = '';
+                document.getElementById('depId').value='';
+                document.getElementById('caid').value='';
+                document.getElementById('reason').value='';
+                
+                setTimeout(function() {
+                    successMsg.classList.remove('show');
+                }, 5000);
+                
+                // NEW: Re-load stats to update appointment count immediately
+                loadDashboardStats();
+
+            } catch (error) {
+                showError('Failed to schedule appointment: ' + error.message);
+            }
+        }
+        
+        async function loadStock() {
+            const loading = document.getElementById('stockLoading');
+            const result = document.getElementById('stockResult');
+            
+            loading.classList.add('show');
+            result.innerHTML = '';
+            
+            try {
+                const data = await apiCall('inventory/low_stock'); 
+                
+                let html = '<div class="table-container"><table class="result-table"><thead><tr>';
+                html += '<th>Hospital</th><th>Medication</th><th>Current Stock</th><th>Reorder Level</th><th>Manufacturer</th>';
+                html += '</tr></thead><tbody>';
+                
+                data.forEach(item => {
+                    // Reusing general styles, could be improved with custom stock styles
+                    var statusClass = item.Quantity <= item.ReorderLevel ? 'churned' : 'customer';
+                    var ManufacturerText = item.Manufacturer || 'N/A';
+                    
+                    html += '<tr>';
+                    html += '<td>' + item.HospitalName + '</td>';
+                    html += '<td><strong>' + item.MedicationName + '</strong></td>';
+                    html += '<td><span class="status-badge ' + statusClass + '">' + item.Quantity + '</span></td>';
+                    html += '<td>' + item.ReorderLevel + '</td>';
+                    html += '<td>' + ManufacturerText + '</td>';
+                    html += '</tr>';
+                });
+                
+                html += '</tbody></table></div>';
+                result.innerHTML = html;
+            } catch (error) {
+                showError('Failed to load all stock data: ' + error.message);
+            } finally {
+                loading.classList.remove('show');
+            }
+        }
+
+        async function loadStaffShare(isFullReport = true) {
+            const loadingId = 'staffFullLoading';
+            const resultId = 'staffFullResult';
+            
+            const loading = document.getElementById(loadingId);
+            const result = document.getElementById(resultId);
+            
+            loading.classList.add('show');
+            result.innerHTML = '';
+            
+            try {
+                const data = await apiCall('staff/share');
+                
+                let html = '<div class="table-container"><table class="result-table"><thead><tr>';
+                html += '<th>Hospital</th><th>Staff Member</th><th>Appointments</th><th>Share %</th>';
+                html += '</tr></thead><tbody>';
+                                
+                data.forEach(staff => {
+                    html += '<tr>';
+                    html += '<td>' + staff.HName + '</td>';
+                    html += '<td><strong>' + staff.FullName + '</strong></td>';
+                    html += '<td>' + staff.TotalAppointments + '</td>';
+                    html += '<td>' + staff.PctOfHospital + '%</td>';
+                    html += '</tr>';
+                });
+                
+                html += '</tbody></table></div>';
+                result.innerHTML = html;
+            } catch (error) {
+                showError('Failed to load doctor/staff data: ' + error.message);
+            } finally {
+                loading.classList.remove('show');
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            showContentView('dashboard');
+        });
+        
+    </script>
+</body>
+</html>
